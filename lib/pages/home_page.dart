@@ -22,6 +22,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  //++++++++++++++++++++++++++++++++++++++++++++++++++++ create request notification channel+++++++++++++++++++++++++++++++++++++++++++++
   bool isFlutterLocalNotificationsInitialized = false;
   late AndroidNotificationChannel channel2;
   Future<void> createRequestnotification() async {
@@ -101,7 +102,7 @@ class _HomePageState extends State<HomePage> {
 
     //start
 
-     // 1. This method call when app in terminated state and you get a notification
+    // 1. This method call when app in terminated state and you get a notification
     // when you click on notification app open from terminated state and you can get notification data in this method
 
     FirebaseMessaging.instance.getInitialMessage().then(
@@ -110,16 +111,19 @@ class _HomePageState extends State<HomePage> {
         log("FirebaseMessaging.instance.getInitialMessage");
         if (message != null) {
           log("New Notification");
-          LocalNotificationService.createanddisplaynotification(message);
-          // if (message.data['_id'] != null) {
-          //   Navigator.of(context).push(
-          //     MaterialPageRoute(
-          //       builder: (context) => DemoScreen(
-          //         id: message.data['_id'],
-          //       ),
-          //     ),
-          //   );
-          // }
+          log("message.data11 ${message.data['name']}");
+          if (message.data['name'] == 'request') {
+            LocalNotificationService.requestNotification(message);
+          } else {
+            LocalNotificationService.createanddisplaynotification(message);
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => NotificationPage(
+                  userid: userId,
+                ),
+              ),
+            );
+          }
         }
       },
     );
@@ -132,8 +136,19 @@ class _HomePageState extends State<HomePage> {
         if (message.notification != null) {
           log(message.notification!.title.toString());
           log(message.notification!.body.toString());
-          log("message.data11 ${message.data}");
-          LocalNotificationService.createanddisplaynotification(message);
+          log("message.data11 ${message.data['name']}");
+          if (message.data['name'] == 'request') {
+            LocalNotificationService.requestNotification(message);
+          } else {
+            LocalNotificationService.createanddisplaynotification(message);
+            // Navigator.of(context).push(
+            //   MaterialPageRoute(
+            //     builder: (context) => NotificationPage(
+            //       userid: userId,
+            //     ),
+            //   ),
+            // );
+          }
         }
       },
     );
@@ -145,7 +160,19 @@ class _HomePageState extends State<HomePage> {
         if (message.notification != null) {
           log(message.notification!.title.toString());
           log(message.notification!.body.toString());
-          log("message.data22 ${message.data['_id']}");
+          log("message.data11 ${message.data['name']}");
+          // if (message.data['name'] == 'request') {
+          //   LocalNotificationService.requestNotification(message);
+          // } else {
+          //   LocalNotificationService.createanddisplaynotification(message);
+          //   Navigator.of(context).push(
+          //     MaterialPageRoute(
+          //       builder: (context) => NotificationPage(
+          //         userid: userId,
+          //       ),
+          //     ),
+          //   );
+          // }
         }
       },
     );

@@ -63,7 +63,7 @@ class _RippleWaveState extends State<RippleWave> {
         var data = json.encode({
           'userName': widget.username,
           'panicType': widget.panictype,
-          'time': buttonpressedDateTime.toString()
+          'time': DateFormat('hh:mm:ss a').format(buttonpressedDateTime)+DateFormat('yyyy-MM-dd').format(buttonpressedDateTime)
         });
         manager.publish(widget.username, data);
         //sending http request

@@ -98,6 +98,21 @@ class _ShowContactState extends State<ShowContact> {
           dismissDirection: const [DismissDirection.startToEnd],
           displayDuration: const Duration(milliseconds: 100),
         );
+      } else if (contactdata[0]['status_flag'] == '2') {
+        if (!mounted) return;
+        Navigator.pop(context);
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: ((context) {
+              return SendRequestPage(
+                  requestuserid: contactdata[0]['user_id'],
+                  requestusername: contactdata[0]['user_name'],
+                  requestuserphonenumber: contactdata[0]['user_phone_number'],
+                  requestusergender: contactdata[0]['user_gender']);
+            }),
+          ),
+        );
       } else if (contactdata[0]['status'] == '0') {
         showTopSnackBar(
           overlaySate!,
@@ -112,14 +127,19 @@ class _ShowContactState extends State<ShowContact> {
         );
       } else {
         if (!mounted) return;
-        Navigator.push(context, MaterialPageRoute(builder: ((context) {
-          return SendRequestPage(
-              requestuserid: contactdata[0]['user_id'],
-              requestusername: contactdata[0]['user_name'],
-              requestuserphonenumber: contactdata[0]['user_phone_number'],
-              requestusergender: contactdata[0]['user_gender']);
-        })));
         Navigator.pop(context);
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: ((context) {
+              return SendRequestPage(
+                  requestuserid: contactdata[0]['user_id'],
+                  requestusername: contactdata[0]['user_name'],
+                  requestuserphonenumber: contactdata[0]['user_phone_number'],
+                  requestusergender: contactdata[0]['user_gender']);
+            }),
+          ),
+        );
       }
     }
   }
@@ -153,6 +173,79 @@ class _ShowContactState extends State<ShowContact> {
         MaterialPageRoute(builder: (context) => const BottomNavBar()),
       );
     }
+  }
+
+  //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ details dialog+++++++++++++++++++++
+  void showDetailsDialog(String name, String phonenumber, String relationship) {
+    log('I am dialog');
+    showDialog(
+        context: context,
+        builder: ((context) {
+          return SimpleDialog(
+            children: [
+              SizedBox(
+                height: 150,
+                child: Column(
+                  children: [
+                    const Text(
+                      "Contact Details",
+                      style: TextStyle(color: Colors.black, fontSize: 20),
+                    ),
+                    const Divider(
+                      thickness: 2,
+                      color: Colors.black,
+                    ),
+                    const SizedBox(
+                      height: 10.0,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                      child: Row(
+                        children: [
+                          const Text(
+                            "Name:",
+                            style: TextStyle(color: Colors.black, fontSize: 15),
+                          ),
+                          Text(
+                            name,
+                            style: const TextStyle(
+                                color: Colors.black, fontSize: 15),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                      child: Row(
+                        children: [
+                          const Text(
+                            "Phone Number:",
+                            style: TextStyle(color: Colors.black, fontSize: 15),
+                          ),
+                          Text(
+                            phonenumber,
+                            style: const TextStyle(
+                                color: Colors.black, fontSize: 15),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    Text(
+                      '**Added as $relationship**',
+                      style: const TextStyle(
+                          color: Colors.black,
+                          fontSize: 18,
+                          fontWeight: FontWeight.normal),
+                    )
+                  ],
+                ),
+              )
+            ],
+          );
+        }));
   }
 
   @override
@@ -254,13 +347,12 @@ class _ShowContactState extends State<ShowContact> {
                                             displayDuration: const Duration(
                                                 milliseconds: 100),
                                           );
-                                        } 
-                                        else if (_contactUserController.text.isEmpty){
+                                        } else if (_contactUserController
+                                            .text.isEmpty) {
                                           showTopSnackBar(
                                             overlaySate!,
                                             const CustomSnackBar.error(
-                                              message:
-                                                  'Text field is empty',
+                                              message: 'Text field is empty',
                                               backgroundColor: Colors.yellow,
                                               textStyle: TextStyle(
                                                   color: Colors.black,
@@ -273,14 +365,16 @@ class _ShowContactState extends State<ShowContact> {
                                             displayDuration: const Duration(
                                                 milliseconds: 100),
                                           );
-                                        }
-                                        else {
+                                        } else {
                                           searchContact(
                                               _contactUserController.text,
                                               userid.toString());
                                         }
                                       }),
-                                      icon: const Icon(Icons.search_sharp,size: 30,),
+                                      icon: const Icon(
+                                        Icons.search_sharp,
+                                        size: 30,
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -328,61 +422,70 @@ class _ShowContactState extends State<ShowContact> {
                                   ),
                                 ],
                               ),
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  color:
-                                      const Color.fromARGB(255, 224, 226, 231),
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 20.0, vertical: 10.0),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            vertical: 10),
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              allcontact[index].contactName,
-                                              style: GoogleFonts.openSans(
-                                                  color: Colors.black,
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.w500),
-                                            ),
-                                            Text(
-                                              'As a ${allcontact[index].contactRelationship}',
-                                              style: const TextStyle(
-                                                  color: Colors.black87,
-                                                  fontSize: 12),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      allcontact[index].contactStatus == '0'
-                                          ? Container()
-                                          : Container(
-                                              height: 25,
-                                              width: 70,
-                                              decoration: BoxDecoration(
-                                                color: const Color.fromARGB(
-                                                    255, 61, 196, 117),
-                                                borderRadius:
-                                                    BorderRadius.circular(12),
+                              child: InkWell(
+                                onTap: () {
+                                  showDetailsDialog(
+                                      allcontact[index].contactName,
+                                      allcontact[index].contactPhonenumber,
+                                      allcontact[index].contactRelationship);
+                                },
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color: const Color.fromARGB(
+                                        255, 224, 226, 231),
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 20.0, vertical: 10.0),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 10),
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                allcontact[index].contactName,
+                                                style: GoogleFonts.openSans(
+                                                    color: Colors.black,
+                                                    fontSize: 16,
+                                                    fontWeight:
+                                                        FontWeight.w500),
                                               ),
-                                              child: const Center(
-                                                  child: Text(
-                                                'Pending',
-                                                style: TextStyle(
-                                                    color: Colors.white),
-                                              )),
-                                            ),
-                                    ],
+                                              Text(
+                                                'As a ${allcontact[index].contactRelationship}',
+                                                style: const TextStyle(
+                                                    color: Colors.black87,
+                                                    fontSize: 12),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        allcontact[index].contactStatus == '0'
+                                            ? Container()
+                                            : Container(
+                                                height: 25,
+                                                width: 70,
+                                                decoration: BoxDecoration(
+                                                  color: const Color.fromARGB(
+                                                      255, 61, 196, 117),
+                                                  borderRadius:
+                                                      BorderRadius.circular(12),
+                                                ),
+                                                child: const Center(
+                                                    child: Text(
+                                                  'Pending',
+                                                  style: TextStyle(
+                                                      color: Colors.white),
+                                                )),
+                                              ),
+                                      ],
+                                    ),
                                   ),
                                 ),
                               ),
